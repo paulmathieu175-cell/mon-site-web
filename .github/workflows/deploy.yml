@@ -26,10 +26,13 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          VITE_FORMSPREE_ID: ${{ vars.VITE_FORMSPREE_ID }}
+          # Le site est servi sous https://<compte>.github.io/<dépôt>/
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+          NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          NEXT_PUBLIC_RESERVATION_URL: ${{ vars.NEXT_PUBLIC_RESERVATION_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: out
 
   deploy:
     needs: build

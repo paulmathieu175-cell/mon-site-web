@@ -1,55 +1,57 @@
-# Yanka — Site du restaurant
+# YAKA — site officiel
 
-Site vitrine moderne (noir & or) réalisé avec **React 19**, **Tailwind CSS 4** et **Vite**.
+Expérience web immersive pour YAKA, restaurant et bar à Paris : noir profond, lumières dorées, touches japonaises.
 
-## Sections
-Accueil · Présentation · Services · La carte (onglets) · Témoignages (carrousel) · Contact & réservation (formulaire validé) · Pied de page.
+**Stack :** Next.js 16 (export statique) · React 19 · TypeScript · Tailwind CSS 4 · GSAP + ScrollTrigger + SplitText · Lenis.
 
-## Prévisualiser sur votre ordinateur
-Prérequis : [Node.js](https://nodejs.org) 20 ou plus.
+## La direction artistique
+
+- **Palette :** noir `#080808`, charbon `#171512`, champagne `#D8C5A3`, ivoire `#F3EDE2`, bordeaux `#391B20`.
+- **Typographies (auto-hébergées) :** Cormorant (titres, très fins, italiques), Manrope (étiquettes en capitales espacées), Shippori Mincho pour les idéogrammes.
+- **Signe :** 夜 (*yoru*, « la nuit »), utilisé comme sceau, en filigrane géant et dans les transitions.
+
+## Les scènes
+
+| Scène | Contenu et animations |
+|---|---|
+| Intro | Écran noir, lettres YAKA floutées qui montent, halo, balayage de lumière, ouverture par masque. Elle attend l'image du hero (2,4 s max) et passe en version courte si elle a déjà été vue pendant la visite. |
+| 01 L'entrée | Hero plein écran, logo géant lettre par lettre, zoom d'ouverture, halo doré qui dérive, parallax au défilement, bouton magnétique, indicateur de défilement. |
+| 02 L'univers | Titre immense révélé ligne par ligne, photos superposées à vitesses différentes, idéogramme en filigrane. |
+| 03 L'expérience | Section épinglée en 4 chapitres : chaque image se dévoile par masque pendant que la précédente recule, avec un zoom continu et une barre de progression. |
+| 04 La gastronomie | Composition asymétrique, puis défilement horizontal des signatures sur ordinateur (glissement natif sur mobile). |
+| 05 La galerie | Zoom cinématographique (une fenêtre s'ouvre jusqu'au plein écran), colonnes en parallax, survol, visionneuse au clavier. |
+| 06 La réservation | « Vivez l'expérience YAKA » lettre par lettre, grand bouton rond magnétique. |
+| 07 Le footer | Logo YAKA sur toute la largeur, qui monte au défilement. |
+| Page « La carte » | Navigation collante, plats révélés au défilement, photo qui suit le curseur au survol d'un plat. |
+
+Partout : menu plein écran, curseur personnalisé (ordinateur), transitions de page par rideau, liens à lettres qui roulent.
+Si l'appareil demande de **réduire les animations**, il n'y a ni intro, ni défilement inertiel, ni scènes épinglées : le contenu s'affiche simplement.
+
+## Prévisualiser
 
 ```bash
-npm install      # une seule fois
-npm run dev      # puis ouvrez http://localhost:5173
+npm install
+npm run dev          # http://localhost:3000
 ```
 
-Pour tester la version finale optimisée :
-```bash
-npm run build
-npm run preview  # http://localhost:4173
-```
+Version finale : `npm run build` produit le site dans `out/`, puis `npm start` le sert localement.
 
 ## Personnaliser
-Presque tout le contenu se trouve dans **`src/data/content.js`** : nom, téléphone, e-mail, adresse,
-horaires, carte et prix, services, avis clients.
-⚠️ Les avis fournis sont des exemples : remplacez-les par de vrais avis.
-Pensez aussi à mettre à jour les informations Google (bloc `application/ld+json`) dans `index.html`.
 
-Couleurs et polices : bloc `@theme` dans `src/index.css`.
+- **Coordonnées, horaires, réseaux, lien de réservation :** `src/config/site.ts`. Les valeurs « À REMPLACER » sont fictives.
+- **Carte et plats signatures :** `src/data/menu.ts` (carte d'exemple).
+- **Photos :** déposez vos images dans `public/images/` en deux largeurs, `nom-900.webp` et `nom-1800.webp`, puis déclarez-les dans `src/data/images.ts`. Les photos actuelles sont des illustrations Unsplash (voir `CREDITS.md`).
+- **Vidéo du hero :** placez `public/videos/hero.mp4` et renseignez `HERO_VIDEO` dans `src/components/scenes/Hero.tsx`.
 
-## Recevoir les messages du formulaire
-Sans configuration, le formulaire valide les champs et affiche une confirmation, mais n'envoie rien.
-1. Créez un formulaire gratuit sur [formspree.io](https://formspree.io) et copiez son identifiant (ex. `xyzabcd`).
-2. En local : créez un fichier `.env` contenant `VITE_FORMSPREE_ID=xyzabcd`.
-3. Sur GitHub : *Settings → Secrets and variables → Actions → Variables* → ajoutez `VITE_FORMSPREE_ID`.
+### Réservation : aucune fonctionnalité simulée
+
+Les boutons « Réserver » ouvrent le **lien de votre module de réservation** (Zenchef, TheFork, SevenRooms…) s'il est
+renseigné dans `reservationUrl`, ou dans la variable GitHub `NEXT_PUBLIC_RESERVATION_URL`.
+Sans lien, ils lancent un **appel téléphonique**.
 
 ## Publier gratuitement
-### GitHub Pages (déjà configuré)
-1. Fusionnez cette branche dans `main`.
-2. Sur GitHub : *Settings → Pages → Source : **GitHub Actions***.
-3. Chaque mise à jour de `main` publie le site sur `https://<votre-pseudo>.github.io/mon-site-web/`.
 
-### Alternatives : Netlify ou Vercel
-Importez le dépôt sur [netlify.com](https://netlify.com) ou [vercel.com](https://vercel.com) :
-commande de build `npm run build`, dossier `dist`. Les deux offrent un nom de domaine gratuit
-et permettent de brancher votre propre domaine (ex. `yanka.fr`).
+**GitHub Pages (déjà configuré) :** fusionnez dans `main`, puis *Settings → Pages → Source : GitHub Actions*.
+Le site sera en ligne sur `https://<compte>.github.io/mon-site-web/`.
 
-## Structure
-```
-index.html              SEO : titre, description, Open Graph, données structurées
-public/                 favicon, robots.txt, en-têtes de sécurité (_headers pour Netlify)
-src/data/content.js     tout le contenu modifiable
-src/components/         Header, Hero, About, Services, Menu, Testimonials, Contact, Footer…
-src/hooks/useReveal.js  animations d'apparition au défilement
-.github/workflows/      publication automatique sur GitHub Pages
-```
+**Vercel ou Netlify :** importez le dépôt. Commande de build : `npm run build`. Dossier publié : `out`. Vous pourrez y brancher votre nom de domaine.

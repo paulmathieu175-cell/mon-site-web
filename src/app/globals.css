@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+@theme {
+  --color-noir: #080808;
+  --color-charbon: #171512;
+  --color-champagne: #d8c5a3;
+  --color-ivoire: #f3ede2;
+  --color-bordeaux: #391b20;
+  --color-fumee: #8f877a;
+  --color-trait: #2a2620;
+
+  --font-display: "Cormorant Variable", "Cormorant", Georgia, serif;
+  --font-sans: "Manrope Variable", "Manrope", system-ui, sans-serif;
+  --font-jp: "Shippori Mincho", "Hiragino Mincho ProN", serif;
+
+  --ease-luxe: cubic-bezier(0.65, 0.05, 0, 1);
+
+  --animate-drift: drift 18s ease-in-out infinite alternate;
+  --animate-scroll-line: scroll-line 2.4s var(--ease-luxe) infinite;
+  --animate-spin-slow: spin 60s linear infinite;
+
+  @keyframes drift {
+    0% { transform: translate3d(-12%, -6%, 0) scale(1); }
+    100% { transform: translate3d(14%, 8%, 0) scale(1.25); }
+  }
+  @keyframes scroll-line {
+    0% { transform: scaleY(0); transform-origin: top; }
+    45% { transform: scaleY(1); transform-origin: top; }
+    55% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-noir);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html.is-locked {
+    overflow: hidden;
+  }
+  body {
+    @apply bg-noir font-sans text-ivoire antialiased;
+    overflow-x: clip;
+    font-feature-settings: "kern", "liga";
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-champagne);
+    color: var(--color-noir);
+  }
+  :focus-visible {
+    outline: 1px solid var(--color-champagne);
+    outline-offset: 4px;
+  }
+  img {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+}
+
+@layer components {
+  .gutter {
+    @apply px-4 sm:px-8 lg:px-14;
+  }
+  /* Petite étiquette éditoriale en capitales espacées */
+  .label {
+    @apply font-sans text-[0.68rem] font-medium tracking-[0.32em] uppercase;
+  }
+  .display {
+    @apply font-display font-light tracking-[-0.02em];
+  }
+  .text-champagne-gradient {
+    background: linear-gradient(100deg, #a8916a 0%, #f3ede2 38%, #d8c5a3 55%, #8a7350 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-champagne/35 to-transparent;
+  }
+}
+
+/* Grain argentique très léger sur tout le site */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: -50%;
+  z-index: 70;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Lien qui « roule » au survol : chaque lettre glisse vers le haut */
+.roll {
+  display: inline-flex;
+  overflow: hidden;
+  line-height: 1.15;
+  vertical-align: bottom;
+}
+.roll > span {
+  display: inline-block;
+  white-space: pre;
+  text-shadow: 0 1.15em 0 currentColor;
+  transition: transform 0.65s var(--ease-luxe);
+}
+.group:hover .roll > span,
+.group:focus-visible .roll > span {
+  transform: translateY(-1.15em);
+}
+
+/* Curseur personnalisé (desktop uniquement) */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+/* Défilement horizontal : natif sur mobile, épinglé sur desktop */
+.h-track-wrap {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.h-track-wrap::-webkit-scrollbar {
+  display: none;
+}
+.h-track-wrap.is-pinned {
+  overflow: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
